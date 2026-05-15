@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Matematică — Comisia Metodică</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body data-subject="matematica">
+    <div id="site-header-mount"></div>
+
+    <main id="main">
+      <nav class="subjects-nav" aria-label="Discipline">
+        <a href="index.html" data-i18n="navHome">Acasă</a>
+        <a href="matematica.html" data-i18n="navMath">Matematică</a>
+        <a href="fizica.html" data-i18n="navPhys">Fizică</a>
+        <a href="chimie.html" data-i18n="navChem">Chimie</a>
+        <a href="informatica.html" data-i18n="navInfo">Informatică</a>
+        <a href="biologie.html" data-i18n="navBio">Biologie</a>
+      </nav>
+
+      <h1 class="page-title" data-i18n="pageMathTitle">Matematică</h1>
+      <p class="page-lead" data-i18n="pageMathLead">Descriere</p>
+
+      <div id="teacher-panel-mount"></div>
+
+      <h2 class="section-title" data-i18n="subTeachers">Profesori</h2>
+      <div class="teachers-list">
+        <div class="teacher-card">
+          <div class="teacher-avatar">SA</div>
+          <div>
+            <h4 data-i18n="tMath1">Nume</h4>
+            <span data-i18n="teacherRole">Profesor</span>
+          </div>
+        </div>
+        <div class="teacher-card">
+          <div class="teacher-avatar">VE</div>
+          <div>
+            <h4 data-i18n="tMath2">Nume</h4>
+            <span data-i18n="teacherRole">Profesor</span>
+          </div>
+        </div>
+        <div class="teacher-card">
+          <div class="teacher-avatar">BE</div>
+          <div>
+            <h4 data-i18n="tMath3">Nume</h4>
+            <span data-i18n="teacherRole">Profesor</span>
+          </div>
+        </div>
+        <div class="teacher-card">
+          <div class="teacher-avatar">BM</div>
+          <div>
+            <h4 data-i18n="tMath4">Nume</h4>
+            <span data-i18n="teacherRole">Profesor</span>
+          </div>
+        </div>
+        <div class="teacher-card">
+          <div class="teacher-avatar">BA</div>
+          <div>
+            <h4 data-i18n="tMath5">Nume</h4>
+            <span data-i18n="teacherRole">Profesor</span>
+          </div>
+        </div>
+        <div class="teacher-card">
+          <div class="teacher-avatar">RD</div>
+          <div>
+            <h4 data-i18n="tMath6">Nume</h4>
+            <span data-i18n="teacherRole">Profesor</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title" data-i18n="subUpcoming">Evenimente viitoare</h2>
+      <div id="db-events-upcoming" class="cards-grid"></div>
+
+      <h2 class="section-title" data-i18n="subPast">Evenimente trecute</h2>
+      <div id="db-events-past" class="cards-grid"></div>
+
+      <h2 class="section-title" data-i18n="subAwards">Premii</h2>
+      <div id="db-awards" class="awards-grid"></div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <script src="assets/auth.js"></script>
+    <script src="assets/site.js"></script>
+    <script src="assets/app-data.js"></script>
+  </body>
+</html>

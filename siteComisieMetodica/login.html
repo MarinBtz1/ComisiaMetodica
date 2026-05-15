@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Autentificare — Comisia Metodică</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body class="auth-body">
+    <div id="site-header-mount"></div>
+
+    <main class="auth-main" id="main">
+      <div class="auth-card">
+        <h1 class="auth-title" data-i18n="navLogin">Autentificare</h1>
+        <p id="auth-message" class="auth-message" hidden></p>
+        <form id="form-login" class="auth-form" novalidate>
+          <label>
+            <span data-i18n="authEmail"></span>
+            <input name="email" type="email" required autocomplete="username" />
+          </label>
+          <label>
+            <span data-i18n="authPassword"></span>
+            <input name="password" type="password" required autocomplete="current-password" />
+          </label>
+          <button type="submit" class="btn-primary btn-block" data-i18n="authSubmitLogin"></button>
+        </form>
+        <p class="auth-switch">
+          <a href="register.html" data-i18n="authNoAccount"></a>
+        </p>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <script src="assets/auth.js"></script>
+    <script src="assets/site.js"></script>
+    <script>
+      (function () {
+        document.getElementById("form-login").addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          var msg = document.getElementById("auth-message");
+          var fd = new FormData(ev.target);
+          msg.hidden = true;
+          fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({
+              email: fd.get("email"),
+              password: fd.get("password"),
+            }),
+          })
+            .then(function (r) {
+              return r.json().then(function (j) {
+                return { ok: r.ok, body: j };
+              });
+            })
+            .then(function (x) {
+              if (!x.ok) {
+                msg.textContent = x.body.error || (window.cmstT && window.cmstT("formError")) || "Eroare";
+                msg.hidden = false;
+                return;
+              }
+              window.CMST_AUTH.setToken(x.body.token);
+              window.location.href = "index.html";
+            })
+            .catch(function () {
+              msg.textContent = (window.cmstT && window.cmstT("formError")) || "Eroare";
+              msg.hidden = false;
+            });
+        });
+      })();
+    </script>
+  </body>
+</html>

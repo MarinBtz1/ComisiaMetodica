@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Comisia Metodică — Științe reale</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body data-subject="comisia">
+    <a class="skip-link" href="#main" data-i18n="skipMain">Sari la conținut</a>
+    <div id="site-header-mount"></div>
+
+    <main id="main">
+      <h1 class="page-title" data-i18n="homeTitle">Bun venit</h1>
+      <p class="page-lead" data-i18n="homeLead">
+        Portalul comisiei metodice pentru disciplinele științelor reale.
+      </p>
+
+      <nav class="subjects-nav" aria-label="Discipline">
+        <a href="index.html" data-i18n="navHome">Acasă</a>
+        <a href="matematica.html" data-i18n="navMath">Matematică</a>
+        <a href="fizica.html" data-i18n="navPhys">Fizică</a>
+        <a href="chimie.html" data-i18n="navChem">Chimie</a>
+        <a href="informatica.html" data-i18n="navInfo">Informatică</a>
+        <a href="biologie.html" data-i18n="navBio">Biologie</a>
+      </nav>
+
+      <h2 class="section-title" data-i18n="subLeadership">Conducerea instituției</h2>
+      <div class="teachers-list">
+        <div class="teacher-card">
+          <div class="teacher-avatar">GT</div>
+          <div>
+            <h4 data-i18n="tBio1">Golban Tatiana</h4>
+            <span data-i18n="teacherPrincipal">Director</span>
+          </div>
+        </div>
+        <div class="teacher-card">
+          <div class="teacher-avatar">CC</div>
+          <div>
+            <h4 data-i18n="tAdj">Cernei Cristina</h4>
+            <span data-i18n="teacherDeputyDirector">Director adjunct</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="teacher-panel-mount"></div>
+
+      <h2 class="section-title" data-i18n="homeUpcoming">Evenimente viitoare (comisie)</h2>
+      <div id="db-events-upcoming" class="cards-grid"></div>
+
+      <h2 class="section-title" data-i18n="subPast">Evenimente trecute</h2>
+      <div id="db-events-past" class="cards-grid"></div>
+
+      <h2 class="section-title" data-i18n="subAwards">Premii, diplome</h2>
+      <div id="db-awards" class="awards-grid"></div>
+
+      <h2 class="section-title" data-i18n="homeSubjects">Discipline</h2>
+      <div class="cards-grid">
+        <article class="card">
+          <h3 class="card__title"><a href="matematica.html" data-i18n="navMath">Matematică</a></h3>
+          <p data-i18n="pageMathLead">Descriere</p>
+        </article>
+        <article class="card">
+          <h3 class="card__title"><a href="fizica.html" data-i18n="navPhys">Fizică</a></h3>
+          <p data-i18n="pagePhysLead">Descriere</p>
+        </article>
+        <article class="card">
+          <h3 class="card__title"><a href="chimie.html" data-i18n="navChem">Chimie</a></h3>
+          <p data-i18n="pageChemLead">Descriere</p>
+        </article>
+        <article class="card">
+          <h3 class="card__title"><a href="informatica.html" data-i18n="navInfo">Informatică</a></h3>
+          <p data-i18n="pageInfoLead">Descriere</p>
+        </article>
+        <article class="card">
+          <h3 class="card__title"><a href="biologie.html" data-i18n="navBio">Biologie</a></h3>
+          <p data-i18n="pageBioLead">Descriere</p>
+        </article>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <script src="assets/auth.js"></script>
+    <script src="assets/site.js"></script>
+    <script src="assets/app-data.js"></script>
+  </body>
+</html>

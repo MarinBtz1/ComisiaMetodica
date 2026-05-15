@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Înregistrare — Comisia Metodică</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body class="auth-body">
+    <div id="site-header-mount"></div>
+
+    <main class="auth-main" id="main">
+      <div class="auth-card">
+        <h1 class="auth-title" data-i18n="navRegister">Înregistrare</h1>
+        <p id="auth-message" class="auth-message" hidden></p>
+        <form id="form-register" class="auth-form" novalidate>
+          <label>
+            <span data-i18n="authFullName"></span>
+            <input name="full_name" type="text" required autocomplete="name" />
+          </label>
+          <label>
+            <span data-i18n="authEmail"></span>
+            <input name="email" type="email" required autocomplete="email" />
+          </label>
+          <label>
+            <span data-i18n="authPassword"></span>
+            <input name="password" type="password" required minlength="6" autocomplete="new-password" />
+          </label>
+          <label>
+            <span data-i18n="authRole"></span>
+            <select name="role" required>
+              <option value="student" data-i18n="authRoleStudent"></option>
+              <option value="teacher" data-i18n="authRoleTeacher"></option>
+            </select>
+          </label>
+          <button type="submit" class="btn-primary btn-block" data-i18n="authSubmitRegister"></button>
+        </form>
+        <p class="auth-switch">
+          <a href="login.html" data-i18n="authHaveAccount"></a>
+        </p>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <script src="assets/auth.js"></script>
+    <script src="assets/site.js"></script>
+    <script>
+      (function () {
+        document.getElementById("form-register").addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          var msg = document.getElementById("auth-message");
+          var fd = new FormData(ev.target);
+          msg.hidden = true;
+          fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({
+              full_name: fd.get("full_name"),
+              email: fd.get("email"),
+              password: fd.get("password"),
+              role: fd.get("role"),
+            }),
+          })
+            .then(function (r) {
+              return r.json().then(function (j) {
+                return { ok: r.ok, body: j };
+              });
+            })
+            .then(function (x) {
+              if (!x.ok) {
+                msg.textContent = x.body.error || (window.cmstT && window.cmstT("formError")) || "Eroare";
+                msg.hidden = false;
+                return;
+              }
+              window.CMST_AUTH.setToken(x.body.token);
+              window.location.href = "index.html";
+            })
+            .catch(function () {
+              msg.textContent = (window.cmstT && window.cmstT("formError")) || "Eroare";
+              msg.hidden = false;
+            });
+        });
+      })();
+    </script>
+  </body>
+</html>
