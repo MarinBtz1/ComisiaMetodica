@@ -1,0 +1,250 @@
+' ========== 2.3 — USE CASE GENERAL ==========
+@startuml usecase-general
+title Fig. 2.1 — Diagramă Use Case (imagine generală)
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Vizitator" as V
+actor "Elev" as E
+actor "Profesor" as P
+
+package "Autentificare și cont" {
+  usecase "Înregistrare cont" as UC1
+  usecase "Autentificare" as UC2
+  usecase "Deconectare" as UC3
+  usecase "Vizualizare profil" as UC4
+}
+
+package "Navigare și prezentare" {
+  usecase "Pagină principală comisie" as UC5
+  usecase "Pagină disciplină" as UC6
+  usecase "Vizualizare conducere" as UC7
+  usecase "Listă profesori catedră" as UC8
+  usecase "Schimbare limbă" as UC9
+  usecase "Schimbare temă UI" as UC10
+  usecase "Footer: contact și linkuri" as UC11
+}
+
+package "Vizualizare date" {
+  usecase "Evenimente viitoare" as UC12
+  usecase "Evenimente trecute" as UC13
+  usecase "Premii și diplome" as UC14
+}
+
+package "Gestiune (profesor)" {
+  usecase "Adăugare eveniment" as UC15
+  usecase "Adăugare premiu/diplomă" as UC16
+  usecase "Ștergere eveniment" as UC17
+  usecase "Ștergere premiu" as UC18
+  usecase "Încărcare imagine" as UC19
+}
+
+V --> UC1
+V --> UC2
+E --> UC2
+P --> UC2
+E --> UC3
+P --> UC3
+E --> UC4
+P --> UC4
+
+E --> UC5
+P --> UC5
+E --> UC6
+P --> UC6
+E --> UC7
+P --> UC7
+E --> UC8
+P --> UC8
+E --> UC9
+P --> UC9
+E --> UC10
+P --> UC10
+E --> UC11
+P --> UC11
+
+E --> UC12
+P --> UC12
+E --> UC13
+P --> UC13
+E --> UC14
+P --> UC14
+
+P --> UC15
+P --> UC16
+P --> UC17
+P --> UC18
+P --> UC19
+@enduml
+
+' ========== 2.3 — ACTIVITATE ==========
+@startuml activity-portal
+title Fig. 2.2 — Diagramă de activitate (utilizare portal)
+start
+:Deschide site;
+if (Pagină login/register?) then (da)
+  :Introduce date;
+  if (Valide?) then (nu)
+    :Mesaj eroare;
+    stop
+  else (da)
+    :Salvează JWT;
+  endif
+else (pagină protejată)
+  if (Token există?) then (nu)
+    :Redirect login;
+    stop
+  endif
+  :GET /api/auth/me;
+  if (Profil OK?) then (nu)
+    :Redirect login;
+    stop
+  endif
+endif
+:Afișare UI (header, footer, i18n);
+:Navigare disciplină;
+:GET evenimente și premii;
+if (Rol = profesor?) then (da)
+  :Afișare panou gestiune;
+  if (Adaugă resursă?) then (da)
+    if (Cu imagine?) then (da)
+      :POST /api/upload/image;
+    endif
+    :POST eveniment sau premiu;
+  elseif (Șterge?) then (da)
+    :DELETE resursă;
+  endif
+endif
+:Afișare carduri utilizator;
+if (Deconectare?) then (da)
+  :Șterge token;
+  stop
+else (nu)
+  :Continuă navigare;
+endif
+stop
+@enduml
+
+' ========== 2.4 — CLASE ==========
+@startuml class-structural
+title Fig. 2.3 — Diagramă de clase
+hide empty members
+
+class User {
+  id : bigint
+  email : text
+  password_hash : text
+  full_name : text
+  role : text
+}
+
+class Event {
+  id : bigint
+  subject_slug : text
+  title : text
+  event_date : date
+  status : text
+  image_url : text
+  created_by : bigint
+}
+
+class Award {
+  id : bigint
+  subject_slug : text
+  title : text
+  award_type : text
+  year : int
+  image_url : text
+  created_by : bigint
+}
+
+class EventsController {
+  +list()
+  +create()
+  +remove()
+}
+
+class AwardsController {
+  +list()
+  +create()
+  +remove()
+}
+
+class UploadController {
+  +uploadImage()
+}
+
+class AppDataModule {
+  +loadAll()
+  +renderLists()
+}
+
+User "1" -- "0..*" Event
+User "1" -- "0..*" Award
+EventsController ..> Event
+AwardsController ..> Award
+AppDataModule ..> EventsController
+AppDataModule ..> AwardsController
+AppDataModule ..> UploadController
+@enduml
+
+' ========== 2.4 — SECVENȚĂ: vizualizare ==========
+@startuml sequence-view-content
+title Fig. 2.4 — Secvență: vizualizare evenimente și premii
+actor "Utilizator" as U
+participant "app-data.js" as UI
+participant "GET /api/events" as EV
+participant "GET /api/awards" as AW
+database "PostgreSQL" as DB
+
+U -> UI : deschide pagină disciplină
+UI -> EV : GET upcoming + past (subject, JWT)
+EV -> DB : SELECT events
+DB --> EV : rânduri
+EV --> UI : JSON
+UI -> AW : GET awards (subject, JWT)
+AW -> DB : SELECT awards
+DB --> AW : rânduri
+AW --> UI : JSON
+UI -> UI : render carduri
+UI --> U : afișare pagină
+@enduml
+
+' ========== 2.4 — SECVENȚĂ: premiu + upload ==========
+@startuml sequence-award-upload
+title Fig. 2.5 — Secvență: adăugare premiu cu imagine
+actor "Profesor" as P
+participant "Formular" as F
+participant "POST /upload/image" as UP
+database "Storage" as ST
+participant "POST /api/awards" as AW
+database "PostgreSQL" as DB
+
+P -> F : date + fișier foto
+F -> UP : multipart + JWT
+UP -> ST : upload
+ST --> UP : URL
+UP --> F : image_url
+F -> AW : JSON premiu + JWT
+AW -> DB : INSERT award
+DB --> AW : OK
+AW --> F : 201
+F --> P : listă actualizată
+@enduml
+
+' ========== 2.4 — SECVENȚĂ: ștergere eveniment ==========
+@startuml sequence-delete-event
+title Fig. 2.6 — Secvență: ștergere eveniment (profesor)
+actor "Profesor" as P
+participant "app-data.js" as UI
+participant "DELETE /api/events/:id" as DEL
+database "PostgreSQL" as DB
+
+P -> UI : confirmă ștergere
+UI -> DEL : DELETE + JWT
+DEL -> DB : DELETE event
+DB --> DEL : OK
+DEL --> UI : success
+UI -> UI : loadAll()
+UI --> P : listă fără element
+@enduml
